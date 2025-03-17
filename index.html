@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR Application</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; margin: 0; padding: 20px; }
+        .container { max-width: 500px; margin: auto; background: white; padding: 20px; box-shadow: 0px 4px 20px rgba(0,0,0,0.1); border-radius: 10px; }
+        h2 { color: #333; margin-bottom: 15px; }
+        input, select { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #ccc; }
+        button { width: 100%; padding: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>HR Application</h2>
+        <h3>Employee Management</h3>
+        <input type="text" id="empId" placeholder="Employee ID">
+        <input type="text" id="empName" placeholder="Employee Name">
+        <button onclick="addEmployee()">Add Employee</button>
+
+        <h3>Attendance Management</h3>
+        <input type="text" id="attEmpId" placeholder="Employee ID">
+        <input type="date" id="attDate">
+        <button onclick="recordAttendance()">Mark Attendance</button>
+
+        <h3>Leave Management</h3>
+        <input type="text" id="leaveEmpId" placeholder="Employee ID">
+        <select id="leaveType">
+            <option value="Sick Leave">Sick Leave</option>
+            <option value="Casual Leave">Casual Leave</option>
+            <option value="Earned Leave">Earned Leave</option>
+        </select>
+        <button onclick="applyLeave()">Apply for Leave</button>
+    </div>
+
+    <script>
+        const webAppUrl = "YOUR_DEPLOYED_WEB_APP_URL";
+
+        async function addEmployee() {
+            const empId = document.getElementById('empId').value;
+            const empName = document.getElementById('empName').value;
+            await fetch(`${webAppUrl}?action=addEmployee&employeeId=${empId}&name=${empName}`);
+            alert("Employee Added Successfully!");
+        }
+
+        async function recordAttendance() {
+            const empId = document.getElementById('attEmpId').value;
+            await fetch(`${webAppUrl}?action=recordAttendance&employeeId=${empId}`);
+            alert("Attendance Recorded Successfully!");
+        }
+
+        async function applyLeave() {
+            const empId = document.getElementById('leaveEmpId').value;
+            const leaveType = document.getElementById('leaveType').value;
+            await fetch(`${webAppUrl}?action=applyLeave&employeeId=${empId}&leaveType=${leaveType}`);
+            alert("Leave Request Submitted!");
+        }
+    </script>
+</body>
+</html>
