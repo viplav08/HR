@@ -11,26 +11,26 @@
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
-            <nav class="col-md-3 col-lg-2 bg-dark text-white sidebar p-4">
-                <h2 class="text-center mb-4">HR Management</h2>
+            <nav class="col-md-3 col-lg-2 sidebar">
+                <h2>HR Management</h2>
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#" onclick="loadModule('EmployeeManagement')">👥 Employee Management</a>
+                        <a class="nav-link" href="#" onclick="loadModule('EmployeeManagement')">👥 Employee Management</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#" onclick="loadModule('AttendanceManagement')">📅 Attendance Management</a>
+                        <a class="nav-link" href="#" onclick="loadModule('AttendanceManagement')">📅 Attendance Management</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#" onclick="loadModule('LeaveManagement')">📝 Leave Management</a>
+                        <a class="nav-link" href="#" onclick="loadModule('LeaveManagement')">📝 Leave Management</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#" onclick="loadModule('Reports')">📊 Reports</a>
+                        <a class="nav-link" href="#" onclick="loadModule('Reports')">📊 Reports</a>
                     </li>
                 </ul>
             </nav>
 
             <!-- Main Content Area -->
-            <main class="col-md-9 col-lg-10 p-5">
+            <main class="col-md-9 col-lg-10 content-area">
                 <h2>Welcome to HR Management System</h2>
                 <p>Select a module from the left menu to get started.</p>
                 <div id="mainContent"></div>
@@ -38,7 +38,7 @@
         </div>
     </div>
 
-    <!-- JavaScript for dynamic module loading -->
+    <!-- JavaScript for Dynamic Module Loading -->
     <script src="script.js"></script>
 </body>
 </html>
