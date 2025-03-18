@@ -1,0 +1,26 @@
+<div>
+    <h3>Employee Management</h3>
+    <form id="employeeForm">
+        <input type="text" id="empName" placeholder="Employee Name" required><br>
+        <input type="text" id="empID" placeholder="Employee ID" required><br>
+        <input type="text" id="designation" placeholder="Designation" required><br>
+        <input type="text" id="department" placeholder="Department" required><br>
+        <button type="button" onclick="addEmployee()">Add Employee</button>
+    </form>
+    <div id="response"></div>
+</div>
+
+<script>
+    function addEmployee() {
+        const empData = [
+            document.getElementById('empName').value,
+            document.getElementById('empID').value,
+            document.getElementById('designation').value,
+            document.getElementById('department').value
+        ];
+
+        google.script.run.withSuccessHandler(response => {
+            document.getElementById('response').innerText = response;
+        }).addEmployee(empData);
+    }
+</script>
