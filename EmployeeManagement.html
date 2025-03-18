@@ -1,26 +1,16 @@
-<div>
-    <h3>Employee Management</h3>
-    <form id="employeeForm">
-        <input type="text" id="empName" placeholder="Employee Name" required><br>
-        <input type="text" id="empID" placeholder="Employee ID" required><br>
-        <input type="text" id="designation" placeholder="Designation" required><br>
-        <input type="text" id="department" placeholder="Department" required><br>
-        <button type="button" onclick="addEmployee()">Add Employee</button>
-    </form>
-    <div id="response"></div>
+<div class="card">
+    <div class="card-header bg-primary text-white">Employee Management</div>
+    <div class="card-body">
+        <form id="employeeForm">
+            <div class="mb-3">
+                <label class="form-label">Employee Name</label>
+                <input type="text" class="form-control" placeholder="Enter Name">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Employee ID</label>
+                <input type="text" class="form-control" placeholder="Enter ID">
+            </div>
+            <button type="button" class="btn btn-success">Add Employee</button>
+        </form>
+    </div>
 </div>
-
-<script>
-    function addEmployee() {
-        const empData = [
-            document.getElementById('empName').value,
-            document.getElementById('empID').value,
-            document.getElementById('designation').value,
-            document.getElementById('department').value
-        ];
-
-        google.script.run.withSuccessHandler(response => {
-            document.getElementById('response').innerText = response;
-        }).addEmployee(empData);
-    }
-</script>
