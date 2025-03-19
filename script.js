@@ -1,66 +1,101 @@
-function loadModule(moduleName) {
-    let moduleContainer = document.getElementById("moduleContainer");
+function loadModule(module) {
+    const contentDiv = document.getElementById('main-content');
 
-    if (moduleName === 'leaveManagement') {
-        moduleContainer.innerHTML = `
-            <h3>Leave Management</h3>
-            <form id="leaveForm" onsubmit="submitLeaveRequest(event)">
-                <input type="text" name="employeeId" placeholder="Employee ID" required><br><br>
-                <input type="text" name="leaveType" placeholder="Leave Type" required><br><br>
-                <input type="date" name="startDate" required><br><br>
-                <input type="date" name="endDate" required><br><br>
-                <input type="hidden" name="sheetName" value="Leave Requests Sheet">
-                <button type="submit">Submit Leave Request</button>
-            </form>
-            <div id="leaveMessage"></div>
-        `;
-    } else if (moduleName === 'attendanceManagement') {
-        moduleContainer.innerHTML = `
-            <h3>Attendance Management</h3>
-            <form id="attendanceForm" onsubmit="submitAttendance(event)">
-                <input type="text" name="employeeId" placeholder="Employee ID" required><br><br>
-                <input type="password" name="password" placeholder="Password" required><br><br>
-                <button type="submit">Mark Attendance</button>
-            </form>
-            <div id="attendanceMessage"></div>
-        `;
+    switch(module) {
+        case 'employeeManagement':
+            contentDiv.innerHTML = `
+                <h2>Employee Management</h2>
+                <form id="employeeForm">
+                    <input type="text" name="employeeId" placeholder="Employee ID" required /><br/>
+                    <input type="text" name="employeeName" placeholder="Employee Name" required /><br/>
+                    <input type="text" name="department" placeholder="Department" required /><br/>
+                    <button type="button" onclick="submitEmployeeData()">Add Employee</button>
+                </form>
+                <p id="employeeMessage"></p>
+            `;
+            break;
+
+        case 'attendanceManagement':
+            contentDiv.innerHTML = `
+                <h2>Attendance Management</h2>
+                <form id="attendanceForm">
+                    <input type="text" name="employeeId" placeholder="Employee ID" required /><br/>
+                    <button type="button" onclick="markAttendance()">Mark Attendance</button>
+                </form>
+                <p id="attendanceMessage"></p>
+            `;
+            break;
+
+        case 'leaveManagement':
+            contentDiv.innerHTML = `
+                <h2>Leave Management</h2>
+                <form id="leaveForm">
+                    <input type="text" name="employeeId" placeholder="Employee ID" required /><br/>
+                    <input type="text" name="leaveType" placeholder="Leave Type (Sick/Annual)" required /><br/>
+                    <input type="date" name="startDate" required /><br/>
+                    <input type="date" name="endDate" required /><br/>
+                    <button type="button" onclick="submitLeaveRequest()">Submit Leave</button>
+                </form>
+                <p id="leaveMessage"></p>
+            `;
+            break;
+
+        case 'reports':
+            contentDiv.innerHTML = `<h2>Reports</h2><p>Generate and view reports here.</p>`;
+            break;
+
+        default:
+            contentDiv.innerHTML = `<h2>Welcome to HR Management System</h2><p>Select a module from the left menu to get started.</p>`;
     }
 }
 
-function submitLeaveRequest(event) {
-    event.preventDefault();
-    const form = event.target;
+function submitEmployeeData() {
+    const form = document.getElementById('employeeForm');
     const formData = new FormData(form);
-    const params = new URLSearchParams(formData);
 
     fetch("https://script.google.com/macros/s/AKfycbxHQcYh1vqyP9TdVrWfpAkDMC212z15B342zZbMUZSyya7KXPK8YciMcJ1tMbQbrRZw/exec", {
         method: "POST",
-        body: params,
+        body: new URLSearchParams(formData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById("employeeMessage").innerText = data.message;
+    })
+    .catch(error => {
+        document.getElementById("employeeMessage").innerText = "Error: " + error;
+    });
+}
+
+function submitLeaveRequest() {
+    const form = document.getElementById('leaveForm');
+    const formData = new FormData(form);
+
+    fetch("YOUR_GOOGLE_SCRIPT_WEB_APP_URL", {
+        method: "POST",
+        body: new URLSearchParams(formData)
     })
     .then(response => response.json())
     .then(data => {
         document.getElementById("leaveMessage").innerText = data.message;
     })
     .catch(error => {
-        document.getElementById("leaveMessage").innerText = "Error submitting leave request.";
+        document.getElementById("leaveMessage").innerText = "Error: " + error;
     });
 }
 
-function submitAttendance(event) {
-    event.preventDefault();
-    const form = event.target;
+function markAttendance() {
+    const form = document.getElementById('attendanceForm');
     const formData = new FormData(form);
-    const params = new URLSearchParams(formData);
 
     fetch("YOUR_GOOGLE_SCRIPT_WEB_APP_URL", {
         method: "POST",
-        body: params,
+        body: new URLSearchParams(formData)
     })
     .then(response => response.json())
     .then(data => {
         document.getElementById("attendanceMessage").innerText = data.message;
     })
     .catch(error => {
-        document.getElementById("attendanceMessage").innerText = "Error marking attendance.";
+        document.getElementById("attendanceMessage").innerText = "Error: " + error;
     });
 }
