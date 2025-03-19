@@ -8,7 +8,7 @@ function submitData(formId, module) {
         params.append(key, value);
     });
 
-    fetch("https://script.google.com/macros/s/AKfycbyD5h_L14WpthHd8gvYdAgIU1Dia5R5YcJPTNSnYnwb5hSqcp8p8FTj93h9di6aI9jM/exec", {
+    fetch("https://script.google.com/macros/s/AKfycbxXyqXc1ZCXEk7bV5Q-AnwOQm07Z1CYrt7bZ4ohtrCwqGCH0AQ075XtgP3QXaHyseZ3/exec", {
         method: "POST",
         body: params,
     })
