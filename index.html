@@ -10,74 +10,46 @@
             background-color: #f4f4f9;
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #e9ecef;
         }
         .container {
-            background-color: #fff;
-            width: 800px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            padding: 20px;
             display: flex;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
             flex-direction: column;
-            gap: 20px;
-            box-sizing: border-box;
+            background-color: #e0e7ff;
+        }
+        .chat-box {
+            width: 60%;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            padding: 20px;
         }
         h2 {
-            margin-bottom: 10px;
-            color: #2c3e50;
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
         }
-        .nav {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        .nav button {
-            padding: 10px 20px;
-            background-color: #2980b9;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .nav button:hover {
-            background-color: #21618c;
-        }
-        .form-container {
-            display: none;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .form-container.active {
-            display: flex;
-        }
-        input {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+        select, input, button {
             width: 100%;
-            box-sizing: border-box;
-            margin-bottom: 10px;
-        }
-        button.submit-btn {
-            padding: 10px 20px;
-            background-color: #27ae60;
-            color: white;
-            border: none;
+            padding: 10px;
+            margin: 10px 0;
             border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
             cursor: pointer;
-            transition: background-color 0.3s;
+            font-weight: bold;
         }
-        button.submit-btn:hover {
-            background-color: #1f8c4d;
+        button:hover {
+            background-color: #45a049;
         }
-        .message {
-            margin-top: 10px;
+        .response {
+            margin-top: 15px;
             color: green;
             font-weight: bold;
         }
@@ -85,61 +57,80 @@
 </head>
 <body>
     <div class="container">
-        <h2>HR Management System</h2>
-        <div class="nav">
-            <button onclick="showForm('employeeForm')">Employees</button>
-            <button onclick="showForm('attendanceForm')">Attendance</button>
-            <button onclick="showForm('leaveForm')">Leave Requests</button>
-        </div>
+        <div class="chat-box">
+            <h2>HR Management System</h2>
+            <select id="module" onchange="loadForm()">
+                <option value="">Select a Module</option>
+                <option value="employee">Employee Management</option>
+                <option value="attendance">Attendance Management</option>
+                <option value="leave">Leave Management</option>
+            </select>
 
-        <div id="employeeForm" class="form-container">
-            <h3>Employee Information</h3>
-            <input type="text" id="empId" placeholder="Employee ID">
-            <input type="text" id="name" placeholder="Name">
-            <input type="text" id="department" placeholder="Department">
-            <input type="text" id="position" placeholder="Position">
-            <input type="date" id="dateOfJoining" placeholder="Date of Joining">
-            <input type="text" id="leaveBalance" placeholder="Leave Balance (Sick, Casual, Earned)">
-            <button class="submit-btn" onclick="submitForm('employee')">Submit</button>
+            <div id="form-container"></div>
+            <div class="response" id="response"></div>
         </div>
-
-        <div id="attendanceForm" class="form-container">
-            <h3>Attendance Record</h3>
-            <input type="text" id="empId" placeholder="Employee ID">
-            <input type="date" id="date" placeholder="Date">
-            <input type="time" id="checkInTime" placeholder="Check-In Time">
-            <input type="time" id="checkOutTime" placeholder="Check-Out Time">
-            <input type="text" id="status" placeholder="Status (Present, Absent, Leave)">
-            <button class="submit-btn" onclick="submitForm('attendance')">Submit</button>
-        </div>
-
-        <div id="leaveForm" class="form-container">
-            <h3>Leave Request</h3>
-            <input type="text" id="empId" placeholder="Employee ID">
-            <input type="text" id="leaveType" placeholder="Leave Type">
-            <input type="date" id="startDate" placeholder="Start Date">
-            <input type="date" id="endDate" placeholder="End Date">
-            <input type="text" id="status" placeholder="Status (Pending, Approved, Rejected)">
-            <button class="submit-btn" onclick="submitForm('leave')">Submit</button>
-        </div>
-
-        <div id="responseMessage" class="message"></div>
     </div>
 
     <script>
-        const webAppUrl = "https://script.google.com/macros/s/AKfycbxXyqXc1ZCXEk7bV5Q-AnwOQm07Z1CYrt7bZ4ohtrCwqGCH0AQ075XtgP3QXaHyseZ3/exec"; // Replace with your Web App URL
+        const webAppUrl = "https://script.google.com/macros/s/AKfycbyD5h_L14WpthHd8gvYdAgIU1Dia5R5YcJPTNSnYnwb5hSqcp8p8FTj93h9di6aI9jM/exec";
 
-        function showForm(formId) {
-            document.querySelectorAll('.form-container').forEach(form => form.classList.remove('active'));
-            document.getElementById(formId).classList.add('active');
+        function loadForm() {
+            const module = document.getElementById("module").value;
+            const formContainer = document.getElementById("form-container");
+            formContainer.innerHTML = "";
+
+            let formHtml = `<h3>${module.charAt(0).toUpperCase() + module.slice(1)} Management</h3>`;
+
+            if (module === "employee") {
+                formHtml += `
+                    <input type="text" id="employeeId" placeholder="Employee ID" required>
+                    <input type="text" id="name" placeholder="Name" required>
+                    <input type="text" id="department" placeholder="Department" required>
+                    <input type="text" id="position" placeholder="Position" required>
+                    <input type="date" id="dateOfJoining" required>
+                    <input type="text" id="leaveBalance" placeholder="Leave Balance" required>
+                `;
+            } else if (module === "attendance") {
+                formHtml += `
+                    <input type="text" id="employeeId" placeholder="Employee ID" required>
+                    <input type="date" id="date" required>
+                    <input type="time" id="checkInTime" placeholder="Check-In Time" required>
+                    <input type="time" id="checkOutTime" placeholder="Check-Out Time" required>
+                    <input type="text" id="status" placeholder="Status (Present/Absent/Leave)" required>
+                `;
+            } else if (module === "leave") {
+                formHtml += `
+                    <input type="text" id="employeeId" placeholder="Employee ID" required>
+                    <input type="text" id="leaveType" placeholder="Leave Type" required>
+                    <input type="date" id="startDate" required>
+                    <input type="date" id="endDate" required>
+                    <input type="text" id="status" placeholder="Leave Status (Pending/Approved/Rejected)" required>
+                `;
+            }
+
+            formHtml += `<button onclick="submitData('${module}')">Submit</button>`;
+            formContainer.innerHTML = formHtml;
         }
 
-        async function submitForm(module) {
-            const formData = new URLSearchParams(new FormData(document.querySelector('.form-container.active')));
-            formData.append("module", module);
+        function submitData(module) {
+            const params = { module };
 
-            const response = await fetch(webAppUrl, { method: "POST", body: formData });
-            document.getElementById("responseMessage").innerText = await response.text();
+            document.querySelectorAll(`#form-container input`).forEach(input => {
+                params[input.id] = input.value;
+            });
+
+            fetch(webAppUrl, {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams(params),
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("response").innerText = data;
+            })
+            .catch(error => {
+                document.getElementById("response").innerText = "Error submitting data: " + error;
+            });
         }
     </script>
 </body>
