@@ -1,14 +1,30 @@
-<div class="sidebar">
-    <h2>HR Management</h2>
-    <ul>
-        <li onclick="loadModule('employeeManagement')">Employee Management</li>
-        <li onclick="loadModule('attendanceManagement')">Attendance Management</li>
-        <li onclick="loadModule('leaveManagement')">Leave Management</li>
-        <li onclick="loadModule('reports')">Reports</li>
-    </ul>
-</div>
-<div class="main-content">
-    <h2>Welcome to HR Management System</h2>
-    <p>Select a module from the left menu to get started.</p>
-    <div id="moduleContainer"></div>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR Management System</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Left Navigation Menu -->
+        <nav class="sidebar">
+            <h2>HR Management</h2>
+            <ul>
+                <li onclick="loadModule('employeeManagement')">Employee Management</li>
+                <li onclick="loadModule('attendanceManagement')">Attendance Management</li>
+                <li onclick="loadModule('leaveManagement')">Leave Management</li>
+                <li onclick="loadModule('reports')">Reports</li>
+            </ul>
+        </nav>
+
+        <!-- Main Content Area -->
+        <div class="content" id="main-content">
+            <h2>Welcome to HR Management System</h2>
+            <p>Select a module from the left menu to get started.</p>
+        </div>
+    </div>
+</body>
+</html>
