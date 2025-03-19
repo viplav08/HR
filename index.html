@@ -4,91 +4,136 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HR Management System</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            min-height: 100vh;
+            justify-content: center;
+            align-items: center;
+            background-color: #ececec;
+        }
+        .container {
+            width: 80%;
+            max-width: 800px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #333;
+            text-align: center;
+        }
+        .tabs {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+        .tab {
+            padding: 10px 20px;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+            transition: background-color 0.3s;
+        }
+        .tab:hover {
+            background-color: #0056b3;
+        }
+        .form-container {
+            display: none;
+        }
+        .form-container.active {
+            display: block;
+        }
+        input, select {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .message {
+            margin-top: 10px;
+            color: green;
+        }
+    </style>
 </head>
 <body>
-    <div class="sidebar">
-        <h2>HR Management</h2>
-        <ul>
-            <li onclick="loadModule('employeeManagement')">Employee Management</li>
-            <li onclick="loadModule('attendanceManagement')">Attendance Management</li>
-            <li onclick="loadModule('leaveManagement')">Leave Management</li>
-            <li onclick="loadModule('reports')">Reports</li>
-        </ul>
-    </div>
-    <div class="main-content">
-        <h2>Welcome to HR Management System</h2>
-        <p>Select a module from the left menu to get started.</p>
-        <div id="moduleContainer"></div>
+    <div class="container">
+        <h2>HR Management System</h2>
+        <div class="tabs">
+            <div class="tab" onclick="showForm('employeeForm')">Employee Management</div>
+            <div class="tab" onclick="showForm('leaveForm')">Leave Management</div>
+            <div class="tab" onclick="showForm('attendanceForm')">Attendance Management</div>
+        </div>
+
+        <div id="employeeForm" class="form-container">
+            <h3>Employee Management</h3>
+            <input type="text" id="empId" placeholder="Employee ID" />
+            <input type="text" id="empName" placeholder="Employee Name" />
+            <input type="text" id="department" placeholder="Department" />
+            <button onclick="submitForm('employee')">Submit</button>
+            <div id="employeeMessage" class="message"></div>
+        </div>
+
+        <div id="leaveForm" class="form-container">
+            <h3>Leave Management</h3>
+            <input type="text" id="leaveEmpId" placeholder="Employee ID" />
+            <input type="text" id="leaveType" placeholder="Leave Type" />
+            <input type="date" id="startDate" />
+            <input type="date" id="endDate" />
+            <button onclick="submitForm('leave')">Submit</button>
+            <div id="leaveMessage" class="message"></div>
+        </div>
+
+        <div id="attendanceForm" class="form-container">
+            <h3>Attendance Management</h3>
+            <input type="text" id="attendEmpId" placeholder="Employee ID" />
+            <input type="text" id="attendance" placeholder="Present/Absent" />
+            <button onclick="submitForm('attendance')">Submit</button>
+            <div id="attendanceMessage" class="message"></div>
+        </div>
     </div>
 
-    <!-- JavaScript Code -->
     <script>
-        function loadModule(moduleName) {
-            let moduleContainer = document.getElementById("moduleContainer");
-
-            if (moduleName === 'leaveManagement') {
-                moduleContainer.innerHTML = `
-                    <h3>Leave Management</h3>
-                    <form id="leaveForm" onsubmit="submitLeaveRequest(event)">
-                        <input type="text" name="employeeId" placeholder="Employee ID" required><br><br>
-                        <input type="text" name="leaveType" placeholder="Leave Type" required><br><br>
-                        <input type="date" name="startDate" required><br><br>
-                        <input type="date" name="endDate" required><br><br>
-                        <input type="hidden" name="sheetName" value="Leave Requests Sheet">
-                        <button type="submit">Submit Leave Request</button>
-                    </form>
-                    <div id="leaveMessage"></div>
-                `;
-            } else if (moduleName === 'attendanceManagement') {
-                moduleContainer.innerHTML = `
-                    <h3>Attendance Management</h3>
-                    <form id="attendanceForm" onsubmit="submitAttendance(event)">
-                        <input type="text" name="employeeId" placeholder="Employee ID" required><br><br>
-                        <input type="password" name="password" placeholder="Password" required><br><br>
-                        <button type="submit">Mark Attendance</button>
-                    </form>
-                    <div id="attendanceMessage"></div>
-                `;
-            }
+        function showForm(formId) {
+            document.querySelectorAll('.form-container').forEach(form => form.classList.remove('active'));
+            document.getElementById(formId).classList.add('active');
         }
 
-        function submitLeaveRequest(event) {
-            event.preventDefault();
-            const form = event.target;
-            const formData = new FormData(form);
-            const params = new URLSearchParams(formData);
-
-            fetch("YOUR_GOOGLE_SCRIPT_WEB_APP_URL", {
-                method: "POST",
-                body: params,
-            })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById("leaveMessage").innerText = data.message;
-            })
-            .catch(error => {
-                document.getElementById("leaveMessage").innerText = "Error submitting leave request.";
+        async function submitForm(module) {
+            const webAppUrl = "https://script.google.com/macros/s/AKfycbyD5h_L14WpthHd8gvYdAgIU1Dia5R5YcJPTNSnYnwb5hSqcp8p8FTj93h9di6aI9jM/exec";
+            const data = new URLSearchParams({
+                module,
+                employeeId: document.getElementById(`${module === 'leave' ? 'leaveEmpId' : module === 'attendance' ? 'attendEmpId' : 'empId'}`).value,
+                employeeName: document.getElementById('empName')?.value,
+                department: document.getElementById('department')?.value,
+                leaveType: document.getElementById('leaveType')?.value,
+                startDate: document.getElementById('startDate')?.value,
+                endDate: document.getElementById('endDate')?.value,
+                attendance: document.getElementById('attendance')?.value
             });
-        }
 
-        function submitAttendance(event) {
-            event.preventDefault();
-            const form = event.target;
-            const formData = new FormData(form);
-            const params = new URLSearchParams(formData);
-
-            fetch("YOUR_GOOGLE_SCRIPT_WEB_APP_URL", {
-                method: "POST",
-                body: params,
-            })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById("attendanceMessage").innerText = data.message;
-            })
-            .catch(error => {
-                document.getElementById("attendanceMessage").innerText = "Error marking attendance.";
-            });
+            const response = await fetch(webAppUrl, { method: "POST", body: data });
+            document.getElementById(`${module}Message`).innerText = await response.text();
         }
     </script>
 </body>
